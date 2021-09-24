@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -48,7 +49,7 @@ type Radio struct {
 	cmdTerminated chan bool
 }
 
-func New(fn string) *Radio {
+func New(ctx context.Context, fn string) *Radio {
 	var rs RadioState
 	jsonConf, err := ioutil.ReadFile(fn)
 	if err != nil {
@@ -64,22 +65,31 @@ func New(fn string) *Radio {
 		State:         &rs,
 		cmdTerminated: make(chan bool),
 	}
-	go func(*Radio) {
+	go func(ctx context.Context, r *Radio) {
 		tick := 0
 		for {
-			r.sync()
-			time.Sleep(tickMs * time.Millisecond)
-			if tick%(statusSeconds*1000/tickMs) == 0 {
-				r.logStatus()
-				tick = 0
+			select {
+			case <-ctx.Done():
+				log.Info("Radio shutting down")
+				if r.broadcasting() {
+					r.turnOff()
+				}
+				return
+			default:
+				r.sync(ctx)
+				time.Sleep(tickMs * time.Millisecond)
+				if tick%(statusSeconds*1000/tickMs) == 0 {
+					r.logStatus()
+					tick = 0
+				}
+				tick++
 			}
-			tick++
 		}
-	}(&r)
+	}(ctx, &r)
 	return &r
 }
 
-func (r *Radio) Update(state *RadioState) {
+func (r *Radio) Update(ctx context.Context, state *RadioState) {
 	r.mutex.Lock()
 	log.Debug("Update()")
 	mustHup := r.State.On && (r.State.Dial.Selected != state.Dial.Selected || r.State.TxFrequency != state.TxFrequency)
@@ -89,13 +99,9 @@ func (r *Radio) Update(state *RadioState) {
 		r.turnOff()
 		// Block until command termination writes to the channel
 		<-r.cmdTerminated
-		r.turnOn()
+		r.turnOn(ctx)
 	}
 	r.mutex.Unlock()
-}
-
-func (r *Radio) Halt() {
-	r.turnOff()
 }
 
 func (r *Radio) broadcasting() bool {
@@ -114,11 +120,11 @@ func (r *Radio) broadcasting() bool {
 	return false
 }
 
-func (r *Radio) sync() {
+func (r *Radio) sync(ctx context.Context) {
 	r.mutex.Lock()
 	if r.State.On && !r.broadcasting() {
 		log.Debug("sync: turning on")
-		r.turnOn()
+		r.turnOn(ctx)
 	} else if !r.State.On && r.broadcasting() {
 		log.Debug("sync: turning off")
 		r.turnOff()
@@ -126,14 +132,14 @@ func (r *Radio) sync() {
 	r.mutex.Unlock()
 }
 
-func (r *Radio) turnOn() {
+func (r *Radio) turnOn(ctx context.Context) {
 	if r.broadcasting() {
 		log.Error("turnOn() called on a radio that is broadcasting")
 	}
 	log.Infof("Beginning broadcast on %s FM", r.State.TxFrequency)
 
 	r.State.On = true
-	r.cmd = r.playCommand()
+	r.cmd = r.playCommand(ctx)
 
 	// Ensure that cmd.Process is set before we start goroutine
 	if err := r.cmd.Start(); err != nil {
@@ -148,7 +154,7 @@ func (r *Radio) turnOn() {
 		}
 
 		if err := r.cmd.Wait(); err != nil {
-			if err.Error() != "signal: terminated" {
+			if err.Error() != "signal: terminated" && err.Error() != "signal: killed" {
 				log.Errorf("Error in run: %s", err)
 			}
 		}
@@ -168,11 +174,11 @@ func (r *Radio) turnOff() {
 	if err := syscall.Kill(p, syscall.SIGTERM); err != nil {
 		log.Errorf("Error in kill: %s", err)
 	}
-	log.Info("Killed process group %d", p)
+	log.Infof("Killed process group %d", p)
 	r.cmd = nil
 }
 
-func (r *Radio) playCommand() *exec.Cmd {
+func (r *Radio) playCommand(ctx context.Context) *exec.Cmd {
 	sel := r.State.Dial.Selected
 	hsh := make(map[string]Station)
 	for _, s := range r.State.Directory.Stations {
@@ -193,7 +199,7 @@ func (r *Radio) playCommand() *exec.Cmd {
 	if *fNoTx {
 		pipeline = "cat /dev/random | /usr/bin/sudo tail -f"
 	}
-	cmd := exec.Command("bash", "-c", pipeline)
+	cmd := exec.CommandContext(ctx, "bash", "-c", pipeline)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	return cmd
 }
