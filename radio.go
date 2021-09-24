@@ -44,6 +44,7 @@ type RadioState struct {
 
 type Radio struct {
 	State         *RadioState
+	filename      string
 	cmd           *exec.Cmd
 	mutex         sync.Mutex
 	cmdTerminated chan bool
@@ -63,6 +64,7 @@ func New(ctx context.Context, fn string) *Radio {
 
 	r := Radio{
 		State:         &rs,
+		filename:      fn,
 		cmdTerminated: make(chan bool),
 	}
 	go func(ctx context.Context, r *Radio) {
@@ -122,6 +124,7 @@ func (r *Radio) broadcasting() bool {
 
 func (r *Radio) sync(ctx context.Context) {
 	r.mutex.Lock()
+	defer r.mutex.Unlock()
 	if r.State.On && !r.broadcasting() {
 		log.Debug("sync: turning on")
 		r.turnOn(ctx)
@@ -129,7 +132,15 @@ func (r *Radio) sync(ctx context.Context) {
 		log.Debug("sync: turning off")
 		r.turnOff()
 	}
-	r.mutex.Unlock()
+	b, err := json.MarshalIndent(r.State, "", "  ")
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	if err = ioutil.WriteFile(r.filename, b, 0644); err != nil {
+		log.Error(err)
+	}
 }
 
 func (r *Radio) turnOn(ctx context.Context) {
