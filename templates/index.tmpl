@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>Radio</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/radio.css">
+    <script src="/assets/radio.js"></script>
+  </head>
+  <body>
+    <div>
+      <i id="toggle-power"></i>
+    </div>
+    <div>
+      <span id="switch">{{ if .on }}On{{ else }}Off{{ end }}</span>
+    </div>
+    <div>
+      {{ if .on }}Broadcasting at {{ else }} Parked on {{ end }}
+      <span id="tx-frequency">{{ .txFrequency }}</span> FM
+    </div>
+    <div>
+      Dial: <span id="dial-selected">{{ .selectedCallsign }}</a></span>
+    </div>
+    <div>
+    </div>
+
+    <h2>Tuner</h2>
+
+    <div id="dial">
+      <div id="dial-header" class="list list-row">
+        <div class="list-item">
+          <div class="col-sm-3">Callsign</div>
+          <div class="col-sm-2">Frequency</div>
+          <div class="col-sm-5">Information</div>
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1"></div>
+        </div>
+      </div>
+      <div id="dial-body" class="list list-row card">
+      </div>
+    </div>
+    <!-- end of dial -->
+
+    <h2>Directory</h2>
+
+    <div class="directory">
+      <div id="directory-header" class="list list-row">
+        <div class="list-item">
+          <div class="col-sm-1">Callsign</div>
+          <div class="col-sm-1">Frequency</div>
+          <div class="col-sm-4">URL</div>
+          <div class="col-sm-4">Information</div>
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1"></div>
+        </div>
+      </div>
+      <div id="directory-body" class="list list-row card">
+        <div id="directory-add-container" class="list-item">
+          <div class="col-sm-1"><input id="directory-add-callsign" size=9 type="text" name="callsign" ></div>
+          <div class="col-sm-1"><input id="directory-add-frequency" size=9 type="text" name="frequency" ></div>
+          <div class="col-sm-4"><input id="directory-add-url" type="text" name="url" ></div>
+          <div class="col-sm-4"><input id="directory-add-info" type="text" name="info" ></div>
+          <div class="col-sm-1">
+            <i class="fas fa-plus-square" id="directory-add"></i>
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
+
+
