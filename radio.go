@@ -124,7 +124,6 @@ func (r *Radio) broadcasting() bool {
 
 func (r *Radio) sync(ctx context.Context) {
 	r.mutex.Lock()
-	defer r.mutex.Unlock()
 	if r.State.On && !r.broadcasting() {
 		log.Debug("sync: turning on")
 		r.turnOn(ctx)
@@ -141,6 +140,7 @@ func (r *Radio) sync(ctx context.Context) {
 	if err = ioutil.WriteFile(r.filename, b, 0644); err != nil {
 		log.Error(err)
 	}
+	r.mutex.Unlock()
 }
 
 func (r *Radio) turnOn(ctx context.Context) {
@@ -182,7 +182,7 @@ func (r *Radio) turnOff() {
 	r.State.On = false
 
 	p := -r.cmd.Process.Pid
-	if err := syscall.Kill(p, syscall.SIGKILL); err != nil {
+	if err := syscall.Kill(p, syscall.SIGTERM); err != nil {
 		log.Errorf("Error in kill: %s", err)
 	}
 	log.Infof("Killed process group %d", p)
