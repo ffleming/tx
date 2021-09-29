@@ -242,6 +242,12 @@
         "url": "http://ice4.somafm.com/scanner-128-mp3",
         "frequency": "Soma FM",
         "info": "San Francisco Public Safety Scanner Feed"
+      },
+      {
+        "callsign": "KSJS",
+        "url": "http://streaming.ksjs.sjsu.edu:8000/live",
+        "frequency": "San Jose, CA",
+        "info": "San Jose State University student radio"
       }
     ]
   },
