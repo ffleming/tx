@@ -16,7 +16,7 @@ rsync -r \
   --exclude="tx/.git*" \
   --exclude="tx/*.bak" \
   --exclude="tx/tx" \
-  "$SOURCE_PATH" "$DEST_USER"@"$DEST_HOST":"$DEST_PATH"
+  "$SOURCE_PATH" "$DEST_USER"@"$DEST_HOST":"$DEST_PARENT"
 echo "done"
 
 echo -n "Setting capabilities..."
