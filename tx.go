@@ -31,19 +31,22 @@ func main() {
 	} else if *fInfo {
 		log.SetLevel(log.InfoLevel)
 	}
-	// log = logger.Init("log", *fDebug, false, ioutil.Discard)
-	// logger.SetFlags(logger.S)
+
 	startMsg := "Starting"
 	if *fDebug {
 		startMsg = startMsg + " in debug mode"
 	}
 	log.Info(startMsg)
-	router := gin.Default()
+
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
 	router.LoadHTMLGlob("templates/*")
 	router.StaticFile("/favicon.ico", "./assets/favicon.ico")
 	router.Static("/assets", "./assets")
+
 	ctx, cancel := context.WithCancel(context.Background())
 	r := New(ctx, "/home/fsf/go/src/fsf/tx/state.json")
+
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"on":          r.State.On,
