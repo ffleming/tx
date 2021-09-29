@@ -86,7 +86,7 @@ func main() {
 	timeout, teardown := context.WithTimeout(context.Background(), 3*time.Second)
 	defer teardown()
 	if err := srv.Shutdown(timeout); err != nil {
-		log.Fatal("Server forced to shutdown: ", err)
+		log.Fatal("Server forced to terminate: ", err)
 	}
 
 	log.Println("Server exiting")

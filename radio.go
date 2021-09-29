@@ -182,7 +182,7 @@ func (r *Radio) turnOff() {
 	r.State.On = false
 
 	p := -r.cmd.Process.Pid
-	if err := syscall.Kill(p, syscall.SIGTERM); err != nil {
+	if err := syscall.Kill(p, syscall.SIGKILL); err != nil {
 		log.Errorf("Error in kill: %s", err)
 	}
 	log.Infof("Killed process group %d", p)
