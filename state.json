@@ -248,6 +248,78 @@
         "url": "http://streaming.ksjs.sjsu.edu:8000/live",
         "frequency": "San Jose, CA",
         "info": "San Jose State University student radio"
+      },
+      {
+        "callsign": "Hygge",
+        "url": "https://hygge.stream.publicradio.org/hygge.mp3",
+        "frequency": "YourClassical",
+        "info": "Danish for a quality of coziness and contentment"
+      },
+      {
+        "callsign": "Focus",
+        "url": "https://focus.stream.publicradio.org/focus.mp3",
+        "frequency": "YourClassical",
+        "info": "Drown out the world"
+      },
+      {
+        "callsign": "YourClassical",
+        "url": "https://ycradio.stream.publicradio.org/ycradio.mp3",
+        "frequency": "YourClassical",
+        "info": "YourClassical Radio"
+      },
+      {
+        "callsign": "Chamber Music",
+        "url": " https://chambermusic.stream.publicradio.org/chambermusic.mp3",
+        "frequency": "YourClassical",
+        "info": "Timeless classics from small ensembles"
+      },
+      {
+        "callsign": "Choral",
+        "url": " https://choral.stream.publicradio.org/choral.mp3",
+        "frequency": "YourClassical",
+        "info": "A community of voices"
+      },
+      {
+        "callsign": "YourClassical Children",
+        "url": " https://classicalkids.stream.publicradio.org/classicalkids.mp3",
+        "frequency": "YourClassical",
+        "info": "Music for young listeners and their parents"
+      },
+      {
+        "callsign": "Concert Band",
+        "url": " https://concertband.stream.publicradio.org/concertband.mp3",
+        "frequency": "YourClassical",
+        "info": "It's like an orchestra, without the strings"
+      },
+      {
+        "callsign": "Favorites",
+        "url": " https://favorites.stream.publicradio.org/favorites.mp3",
+        "frequency": "YourClassical",
+        "info": "Time tested. Listener approved"
+      },
+      {
+        "callsign": "Holiday",
+        "url": " https://holiday.stream.publicradio.org/holiday_yc.mp3",
+        "frequency": "YourClassical",
+        "info": "Festive favorites for every holiday"
+      },
+      {
+        "callsign": "Lullabies",
+        "url": " https://lullabies.stream.publicradio.org/lullabies.mp3",
+        "frequency": "YourClassical",
+        "info": "Soothe your little ones"
+      },
+      {
+        "callsign": "Peaceful Piano",
+        "url": " https://peacefulpiano.stream.publicradio.org/peacefulpiano.mp3",
+        "frequency": "YourClassical",
+        "info": "Replenish your spirit with a playlist of peaceful piano music"
+      },
+      {
+        "callsign": "Relax",
+        "url": " https://relax.stream.publicradio.org/relax.mp3",
+        "frequency": "YourClassical",
+        "info": "Keep calm and carry on."
       }
     ]
   },
