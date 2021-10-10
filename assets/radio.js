@@ -176,9 +176,16 @@ function singleBind() {
   $("#toggle-power").click(togglePower)
   $("#directory-add").click(createStation)
 
-  $("#dial-body").sortable()
+  $("#dial-body").sortable({
+    update: function( e, ui ) {
+      writeState(getState())
+    }
+  })
   $("#directory-body").sortable({
-    items: '.list-item:not(:last)'
+    items: '.list-item:not(:last)',
+    update: function( e, ui ) {
+      writeState(getState())
+    }
   })
 }
 
