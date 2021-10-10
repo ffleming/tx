@@ -320,6 +320,12 @@
         "url": "https://relax.stream.publicradio.org/relax.mp3",
         "frequency": "YourClassical",
         "info": "Keep calm and carry on."
+      },
+      {
+        "callsign": "Jazz24",
+        "url": "https://live.wostreaming.net/direct/ppm-jazz24mp3-ibc1",
+        "frequency": "Jazz24",
+        "info": "Jazz24 from Seattle and Tacoma, Washington"
       }
     ]
   },
