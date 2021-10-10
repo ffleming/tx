@@ -96,6 +96,7 @@ func (r *Radio) Update(ctx context.Context, state *RadioState) {
 	log.Debug("Update()")
 	mustHup := r.State.On && (r.State.Dial.Selected != state.Dial.Selected || r.State.TxFrequency != state.TxFrequency)
 	r.State = state
+	r.saveState()
 	if mustHup {
 		log.Debug("Must HUP")
 		r.turnOff()
@@ -122,15 +123,7 @@ func (r *Radio) broadcasting() bool {
 	return false
 }
 
-func (r *Radio) sync(ctx context.Context) {
-	r.mutex.Lock()
-	if r.State.On && !r.broadcasting() {
-		log.Debug("sync: turning on")
-		r.turnOn(ctx)
-	} else if !r.State.On && r.broadcasting() {
-		log.Debug("sync: turning off")
-		r.turnOff()
-	}
+func (r *Radio) saveState() {
 	b, err := json.MarshalIndent(r.State, "", "  ")
 	if err != nil {
 		log.Error(err)
@@ -139,6 +132,17 @@ func (r *Radio) sync(ctx context.Context) {
 
 	if err = ioutil.WriteFile(r.filename, b, 0644); err != nil {
 		log.Error(err)
+	}
+}
+
+func (r *Radio) sync(ctx context.Context) {
+	r.mutex.Lock()
+	if r.State.On && !r.broadcasting() {
+		log.Debug("sync: turning on")
+		r.turnOn(ctx)
+	} else if !r.State.On && r.broadcasting() {
+		log.Debug("sync: turning off")
+		r.turnOff()
 	}
 	r.mutex.Unlock()
 }
