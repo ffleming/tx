@@ -4,10 +4,10 @@
   "directory": {
     "stations": [
       {
-        "callsign": "vaporwaves",
+        "callsign": "Vaporwaves",
         "url": "http://ice2.somafm.com/vaporwaves-128-mp3",
-        "frequency": "often",
-        "info": "Soma FM"
+        "frequency": "Soma FM",
+        "info": "All Vaporwave, all the time"
       },
       {
         "callsign": "kday",
@@ -332,7 +332,7 @@
   "dial": {
     "selected": "Groove Salad",
     "stations": [
-      "vaporwaves",
+      "Vaporwaves",
       "kday",
       "wfpk",
       "Groove Salad",
