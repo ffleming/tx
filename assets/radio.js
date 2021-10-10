@@ -63,15 +63,16 @@ function draw(state) {
   })
   $("#tx-frequency").val(state.frequency)
 
-  // state.dial.stations.forEach(callsign => {
-  //   inDirectory = state.directory.stations.find(s => s.callsign == callsign)
-  //   addDialRow(inDirectory)
-  // })
+  state.dial.stations.forEach(callsign => {
+    station = state.directory.stations.find(s => s.callsign == callsign)
+    if(!!station) {
+      addDialRow(station)
+    } else {
+      console.log("Error: station " + callsign + " not in directory")
+    }
+  })
   state.directory.stations.forEach(station => {
     isCallInDial = !!(state.dial.stations.find(cs => cs == station.callsign))
-    if(isCallInDial) {
-      addDialRow(station)
-    }
     addDirectoryRow(station, isCallInDial)
   })
   bind()
