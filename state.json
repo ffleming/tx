@@ -326,6 +326,12 @@
         "url": "https://live.wostreaming.net/direct/ppm-jazz24mp3-ibc1",
         "frequency": "Jazz24",
         "info": "Jazz24 from Seattle and Tacoma, Washington"
+      },
+      {
+        "callsign": "KEXP",
+        "url": "http://live-mp3-128.kexp.org",
+        "frequency": "90.3",
+        "info": "Where the music matters"
       }
     ]
   },
