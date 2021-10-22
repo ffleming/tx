@@ -35,6 +35,15 @@ type RadioDirectory struct {
 	Stations []Station `json:"stations" binding:"required"`
 }
 
+func (rd *RadioDirectory) Lookup(callsign string) (Station, error) {
+	for _, st := range rd.Stations {
+		if st.Callsign == callsign {
+			return st, nil
+		}
+	}
+	return Station{}, fmt.Errorf("Station with callsign %q not found", callsign)
+}
+
 type RadioState struct {
 	On          bool           `json:"on"`
 	TxFrequency string         `json:"frequency" binding:"required"`
@@ -44,13 +53,14 @@ type RadioState struct {
 
 type Radio struct {
 	State         *RadioState
+	display       RadioDisplay
 	filename      string
 	cmd           *exec.Cmd
 	mutex         sync.Mutex
 	cmdTerminated chan bool
 }
 
-func New(ctx context.Context, fn string) *Radio {
+func NewRadio(ctx context.Context, fn string, rd RadioDisplay) *Radio {
 	var rs RadioState
 	jsonConf, err := ioutil.ReadFile(fn)
 	if err != nil {
@@ -64,6 +74,7 @@ func New(ctx context.Context, fn string) *Radio {
 
 	r := Radio{
 		State:         &rs,
+		display:       rd,
 		filename:      fn,
 		cmdTerminated: make(chan bool),
 	}
@@ -153,6 +164,14 @@ func (r *Radio) turnOn(ctx context.Context) {
 	}
 	log.Infof("Beginning broadcast on %s FM", r.State.TxFrequency)
 
+	station, err := r.State.Directory.Lookup(r.State.Dial.Selected)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	r.display.Write(station.Frequency + "\n" + station.Callsign)
+
 	r.State.On = true
 	r.cmd = r.playCommand(ctx)
 
@@ -194,15 +213,22 @@ func (r *Radio) turnOff() {
 }
 
 func (r *Radio) playCommand(ctx context.Context) *exec.Cmd {
-	sel := r.State.Dial.Selected
-	hsh := make(map[string]Station)
-	for _, s := range r.State.Directory.Stations {
-		hsh[s.Callsign] = s
-	}
+	// sel := r.State.Dial.Selected
+	/*
+		hsh := make(map[string]Station)
+		for _, s := range r.State.Directory.Stations {
+			hsh[s.Callsign] = s
+		}
 
-	station, ok := hsh[sel]
-	if !ok {
-		log.Errorf("Couldn't find key %q in hash", sel)
+		station, ok := hsh[sel]
+		if !ok {
+			log.Errorf("Couldn't find key %q in hash", sel)
+			return nil
+		}
+	*/
+	station, err := r.State.Directory.Lookup(r.State.Dial.Selected)
+	if err != nil {
+		log.Error(err)
 		return nil
 	}
 
