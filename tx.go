@@ -25,27 +25,31 @@ func main() {
 	flag.Parse()
 	log.SetLevel(log.WarnLevel)
 	log.SetReportCaller(true)
+	mode := gin.ReleaseMode
 
 	if *fDebug {
 		log.SetLevel(log.DebugLevel)
+		mode = gin.DebugMode
 	} else if *fInfo {
 		log.SetLevel(log.InfoLevel)
 	}
 
-	startMsg := "Starting"
-	if *fDebug {
-		startMsg = startMsg + " in debug mode"
-	}
-	log.Info(startMsg)
-
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(mode)
 	router := gin.New()
 	router.LoadHTMLGlob("templates/*")
 	router.StaticFile("/favicon.ico", "./assets/favicon.ico")
 	router.Static("/assets", "./assets")
 
 	ctx, cancel := context.WithCancel(context.Background())
-	r := New(ctx, "/home/fsf/go/src/fsf/tx/state.json")
+	var disp RadioDisplay
+	disp, err := NewOLEDDisplay()
+
+	if err != nil {
+		log.Error("Using null display")
+		disp = new(NullDisplay)
+	}
+	defer disp.Close()
+	r := NewRadio(ctx, "/home/fsf/go/src/fsf/tx/state.json", disp)
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
