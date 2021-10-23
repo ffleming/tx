@@ -103,6 +103,10 @@
      flex: 1 1 auto
  }
 
+ input[type="text"] {
+    width: 100%;
+}
+
  .text-color {
      color: #5e676f
  }

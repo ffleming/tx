@@ -10,16 +10,10 @@
         "info": "All Vaporwave, all the time"
       },
       {
-        "callsign": "kday",
+        "callsign": "KDAY",
         "url": "https://14943.live.streamtheworld.com/KDAYFM.mp3",
         "frequency": "93.5",
         "info": "Los Angeles"
-      },
-      {
-        "callsign": "wfpk",
-        "url": "https://lpm.streamguys1.com/wfpk-tunein",
-        "frequency": "91.9",
-        "info": "Louisville"
       },
       {
         "callsign": "Groove Salad",
@@ -246,7 +240,7 @@
       {
         "callsign": "KSJS",
         "url": "http://streaming.ksjs.sjsu.edu:8000/live",
-        "frequency": "San Jose, CA",
+        "frequency": "90.5",
         "info": "San Jose State University student radio"
       },
       {
@@ -346,7 +340,7 @@
     "stations": [
       "WFPK",
       "KEXP",
-      "kday",
+      "KDAY",
       "Groove Salad",
       "Groove Salad Classic",
       "Vaporwaves",
