@@ -332,25 +332,32 @@
         "url": "http://live-mp3-128.kexp.org",
         "frequency": "90.3",
         "info": "Where the music matters"
+      },
+      {
+        "callsign": "WFPK",
+        "url": "http://lpm.streamguys1.com/wfpk-web",
+        "frequency": "91.9",
+        "info": "Louisville public radio"
       }
     ]
   },
   "dial": {
     "selected": "Groove Salad",
     "stations": [
-      "Vaporwaves",
+      "WFPK",
+      "KEXP",
       "kday",
-      "wfpk",
       "Groove Salad",
+      "Groove Salad Classic",
+      "Vaporwaves",
       "Drone Zone",
       "Deep Space One",
       "Underground 80s",
-      "Groove Salad Classic",
       "Seven Inch Soul",
       "Mission Control",
       "SF 10-33",
-      "Jazz24",
-      "Chamber Music"
+      "Chamber Music",
+      "Jazz24"
     ]
   }
 }
