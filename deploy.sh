@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-SOURCE_PATH=/home/fsf/go/src/fsf/tx
+SOURCE_PATH="$GOPATH/src/fsf/tx"
 DEST_USER=fsf
 DEST_HOST=tx
 DEST_PARENT=/home/fsf/go/src/fsf
