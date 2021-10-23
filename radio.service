@@ -1,0 +1,19 @@
+[Unit]
+Description=tx radio broadcaster
+Documentation=https://github.com/ffleming/tx
+After=network.target
+
+[Service]
+WorkingDirectory=/home/fsf/go/src/fsf/tx
+User=root
+ExecStart=/home/fsf/go/src/fsf/tx/tx-arm
+SyslogIdentifier=tx
+StandardOutput=syslog
+StandardError=syslog
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target
+Alias=tx.service
