@@ -4,6 +4,7 @@ import (
 	"image"
 	"io/ioutil"
 	"strings"
+	"time"
 
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
@@ -17,15 +18,24 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type DisplayPage struct {
+	Line1    string
+	Line2    string
+	Duration time.Duration
+}
+
 type RadioDisplay interface {
 	Write(string)
+	Tick([]DisplayPage)
 	Close()
 }
 
 type OLEDDisplay struct {
-	device *ssd1306.Dev
-	font   font.Face
-	bus    i2c.BusCloser
+	device          *ssd1306.Dev
+	font            font.Face
+	bus             i2c.BusCloser
+	curPage         int
+	lastPageDisplay time.Time
 }
 
 type NullDisplay struct{}
@@ -37,6 +47,8 @@ func (nd *NullDisplay) Write(s string) {
 func (nd *NullDisplay) Close() {
 	log.Info("Display close")
 }
+
+func (nd *NullDisplay) Tick(_ []DisplayPage) {}
 
 func NewOLEDDisplay() (*OLEDDisplay, error) {
 	if _, err := host.Init(); err != nil {
@@ -109,4 +121,22 @@ func (rd *OLEDDisplay) Write(s string) {
 
 func (rd *OLEDDisplay) Close() {
 	rd.bus.Close()
+}
+
+// TODO(fsf): Figure out a better thing to do than exported Tick method
+// in interface
+func (rd *OLEDDisplay) Tick(pages []DisplayPage) {
+	now := time.Now()
+
+	if rd.curPage >= len(pages) {
+		rd.curPage = 0
+		log.Errorf("Got page index out of range: %d (of %d)", rd.curPage, len(pages))
+	}
+
+	if rd.lastPageDisplay.Add(pages[rd.curPage].Duration).Before(now) {
+		rd.curPage = (rd.curPage + 1) % len(pages)
+		p := pages[rd.curPage]
+		rd.lastPageDisplay = time.Now()
+		rd.Write(p.Line1 + "\n" + p.Line2)
+	}
 }

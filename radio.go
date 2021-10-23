@@ -15,8 +15,10 @@ import (
 )
 
 const (
-	tickMs        = 500
-	statusSeconds = 5
+	tickDur = 50 * time.Millisecond
+	syncDur = 500 * time.Millisecond
+
+	statusDur = 5 * time.Second
 )
 
 type Station struct {
@@ -79,7 +81,7 @@ func NewRadio(ctx context.Context, fn string, rd RadioDisplay) *Radio {
 		cmdTerminated: make(chan bool),
 	}
 	go func(ctx context.Context, r *Radio) {
-		tick := 0
+		var lastSync, lastStatus time.Time
 		for {
 			select {
 			case <-ctx.Done():
@@ -89,13 +91,17 @@ func NewRadio(ctx context.Context, fn string, rd RadioDisplay) *Radio {
 				}
 				return
 			default:
-				r.sync(ctx)
-				time.Sleep(tickMs * time.Millisecond)
-				if tick%(statusSeconds*1000/tickMs) == 0 {
-					r.logStatus()
-					tick = 0
+				now := time.Now()
+				if lastSync.Add(syncDur).Before(now) {
+					r.sync(ctx)
+					lastSync = now
 				}
-				tick++
+				if lastStatus.Add(statusDur).Before(now) {
+					r.logStatus()
+					lastStatus = now
+				}
+				r.updateScreen()
+				time.Sleep(tickDur)
 			}
 		}
 	}(ctx, &r)
@@ -163,14 +169,6 @@ func (r *Radio) turnOn(ctx context.Context) {
 		log.Error("turnOn() called on a radio that is broadcasting")
 	}
 	log.Infof("Beginning broadcast on %s FM", r.State.TxFrequency)
-
-	station, err := r.State.Directory.Lookup(r.State.Dial.Selected)
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	r.display.Write(station.Frequency + "\n" + station.Callsign)
 
 	r.State.On = true
 	r.cmd = r.playCommand(ctx)
@@ -241,4 +239,39 @@ func (r *Radio) logStatus() {
 			log.Debugf("ProcessState %+v", r.cmd.ProcessState)
 		}
 	}
+}
+
+func (r *Radio) updateScreen() {
+	var pages []DisplayPage
+
+	if !r.State.On {
+		pages = []DisplayPage{
+			{
+				Line1:    "Off",
+				Duration: 10000 * time.Millisecond,
+			},
+		}
+		r.display.Tick(pages)
+		return
+	}
+
+	station, err := r.State.Directory.Lookup(r.State.Dial.Selected)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	pages = []DisplayPage{
+		{
+			Line1:    station.Frequency,
+			Line2:    station.Callsign,
+			Duration: 5000 * time.Millisecond,
+		},
+		{
+			Line1:    "Broadcasting on",
+			Line2:    fmt.Sprintf("%s FM", r.State.TxFrequency),
+			Duration: 2000 * time.Millisecond,
+		},
+	}
+	r.display.Tick(pages)
 }
