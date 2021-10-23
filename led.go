@@ -129,8 +129,8 @@ func (rd *OLEDDisplay) Tick(pages []DisplayPage) {
 	now := time.Now()
 
 	if rd.curPage >= len(pages) {
-		rd.curPage = 0
 		log.Errorf("Got page index out of range: %d (of %d)", rd.curPage, len(pages))
+		rd.curPage = 0
 	}
 
 	if rd.lastPageDisplay.Add(pages[rd.curPage].Duration).Before(now) {
