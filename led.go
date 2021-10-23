@@ -71,8 +71,9 @@ func NewOLEDDisplay() (*OLEDDisplay, error) {
 		return nil, err
 	}
 	ttfFace := truetype.NewFace(ttf, &truetype.Options{
-		Size: 14,
-		DPI:  72,
+		Size:    14,
+		DPI:     72,
+		Hinting: font.HintingFull,
 	})
 	disp := &OLEDDisplay{
 		device: dev,
@@ -99,7 +100,7 @@ func (rd *OLEDDisplay) Write(s string) {
 		Dot:  dot,
 	}
 	drawer.DrawString(arr[0])
-	drawer.Dot = fixed.P(0, 32)
+	drawer.Dot = fixed.P(0, 30)
 	drawer.DrawString(arr[1])
 	if err := rd.device.Draw(rd.device.Bounds(), img, image.Point{}); err != nil {
 		log.Error(err)

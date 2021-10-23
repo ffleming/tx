@@ -213,19 +213,6 @@ func (r *Radio) turnOff() {
 }
 
 func (r *Radio) playCommand(ctx context.Context) *exec.Cmd {
-	// sel := r.State.Dial.Selected
-	/*
-		hsh := make(map[string]Station)
-		for _, s := range r.State.Directory.Stations {
-			hsh[s.Callsign] = s
-		}
-
-		station, ok := hsh[sel]
-		if !ok {
-			log.Errorf("Couldn't find key %q in hash", sel)
-			return nil
-		}
-	*/
 	station, err := r.State.Directory.Lookup(r.State.Dial.Selected)
 	if err != nil {
 		log.Error(err)
