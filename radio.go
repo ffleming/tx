@@ -223,7 +223,7 @@ func (r *Radio) playCommand(ctx context.Context) *exec.Cmd {
 		shellescape.Quote(r.State.TxFrequency),
 	)
 	if *fNoTx {
-		pipeline = "cat /dev/random | /usr/bin/sudo tail -f"
+		pipeline = "cat /proc/cpuinfo | /usr/bin/sudo tail -f"
 	}
 	cmd := exec.CommandContext(ctx, "bash", "-c", pipeline)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
