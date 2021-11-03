@@ -11,6 +11,10 @@ echo -n "Building..."
 GOMAXPROCS=1 GOOS=linux GOARCH=arm GOARM=6 go build -o tx-arm .
 echo "done"
 
+echo -n "Halting..."
+ssh tx sudo systemctl stop radio
+echo "Done"
+
 echo -n "Transferring..."
 rsync -r \
   --exclude="tx/.git*" \
@@ -22,3 +26,6 @@ echo "done"
 echo -n "Setting capabilities..."
 ssh tx "$DEST_PATH/setcap.sh"
 echo "done"
+
+echo -n "Starting..."
+ssh tx sudo systemctl start radio
