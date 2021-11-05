@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fsf/radio"
 	"net/http"
 	"os"
 	"os/signal"
@@ -40,16 +41,10 @@ func main() {
 	router.StaticFile("/favicon.ico", "./assets/favicon.ico")
 	router.Static("/assets", "./assets")
 
-	ctx, cancel := context.WithCancel(context.Background())
-	var disp RadioDisplay
-	disp, err := NewOLEDDisplay()
+	c := context.WithValue(context.Background(), "tx", !*fNoTx)
+	ctx, cancel := context.WithCancel(c)
 
-	if err != nil {
-		log.Error("Using null display")
-		disp = new(NullDisplay)
-	}
-	defer disp.Close()
-	r := NewRadio(ctx, "/home/fsf/go/src/fsf/tx/state.json", disp)
+	r := radio.New(ctx, "/home/fsf/go/src/fsf/tx/state.json")
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
@@ -64,7 +59,7 @@ func main() {
 	})
 
 	router.POST("/radio", func(c *gin.Context) {
-		var update RadioState
+		var update radio.State
 		if err := c.ShouldBindJSON(&update); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
