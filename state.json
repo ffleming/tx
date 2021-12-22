@@ -94,12 +94,6 @@
         "info": "Indie Folk, Alt-folk and the occasional folk classics."
       },
       {
-        "callsign": "BAGeL Radio",
-        "url": "http://ice6.somafm.com/bagel-128-mp3",
-        "frequency": "Soma FM",
-        "info": "What alternative rock radio should sound like. [explicit]"
-      },
-      {
         "callsign": "Beat Blender",
         "url": "http://ice1.somafm.com/beatblender-128-mp3",
         "frequency": "Soma FM",
@@ -236,6 +230,12 @@
         "url": "http://ice4.somafm.com/scanner-128-mp3",
         "frequency": "Soma FM",
         "info": "San Francisco Public Safety Scanner Feed"
+      },
+      {
+        "callsign": "BAGeL Radio",
+        "url": "https://ais-sa3.cdnstream1.com/2606_128.mp3",
+        "frequency": "BAGel Radio (formerly SomaFM)",
+        "info": "What alternative rock radio should sound like. [explicit]"
       },
       {
         "callsign": "KSJS",
