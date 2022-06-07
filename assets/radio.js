@@ -53,7 +53,8 @@ function draw(state) {
   $("#directory-add-info").val("")
   $("#directory-add-url").val("")
   $("#directory-add-callsign").val("")
-  $("#tx-frequency").val("")
+  $("#tx-frequency").text("")
+  $("#tx-message").text("")
 
   $("#dial-selected").text(state.dial.selected)
 
@@ -62,7 +63,8 @@ function draw(state) {
   $(".list-item:not(#directory-add-container)").each((_, el) => {
     el.remove()
   })
-  $("#tx-frequency").val(state.frequency)
+  $("#tx-message").text(state.on ? "Broadcasting at " : "Parked on ")
+  $("#tx-frequency").text(state.frequency)
 
   // CSS directives would be enough for alternate coloring of Dial rows, but
   // Directory rows would try to color hidden rows and disrupt the pattern.
