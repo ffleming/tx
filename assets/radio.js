@@ -57,54 +57,64 @@ function draw(state) {
 
   $("#switch").text(state.on ? "On" : "Off")
   $("#dial-selected").text(state.dial.selected)
-  $("#toggle-power").removeClass("fa-toggle-on fa-toggle-off").addClass("fas fa-toggle-" + (state.on ? "on" : "off"))
+  $("#toggle-power").removeClass("fa-toggle-on fa-toggle-off").addClass("action-icon fas fa-toggle-" + (state.on ? "on" : "off"))
   $(".list-item:not(#directory-add-container)").each((_, el) => {
     el.remove()
   })
   $("#tx-frequency").val(state.frequency)
 
+  // CSS directives would be enough for alternate coloring of Dial rows, but
+  // Directory rows would try to color hidden rows and disrupt the pattern.
+  // Implement manual coloring by adding even-row/odd-row classes in both for
+  // consistency's sake even though it's unnecessary in the dial case.
+  var visibleRowNum = 1;
   state.dial.stations.forEach(callsign => {
     station = state.directory.stations.find(s => s.callsign == callsign)
     if(!!station) {
-      addDialRow(station)
+      addDialRow(station, visibleRowNum % 2 == 1)
+      visibleRowNum++
     } else {
       console.log("Error: station " + callsign + " not in directory")
     }
   })
+
   state.directory.stations.forEach(station => {
     isCallInDial = !!(state.dial.stations.find(cs => cs == station.callsign))
-    addDirectoryRow(station, isCallInDial)
+    addDirectoryRow(station, isCallInDial, visibleRowNum % 2 == 1)
+    if(!isCallInDial) {
+      visibleRowNum++
+    }
   })
   bind()
 }
 
-function addDirectoryRow(obj, hidden) {
-  html = `<div class="list-item ` + (hidden ? "hidden" : "") + `">
+function addDirectoryRow(obj, hidden, odd) {
+  html = `<div class="list-item ` + (hidden ? "hidden " : " ") + (odd ? "odd-row" : "even-row") + `">
             <div class ="col-sm-1"><span class="callsign">` + obj["callsign"] + `</span></div>
             <div class ="col-sm-1"><span class="frequency">` + obj["frequency"] + `</span></div>
             <div class ="col-sm-4"><span class="url">` + obj["url"] + `</span></div>
             <div class ="col-sm-4"><span class="info">` + obj["info"] + `</span></div>
             <div class ="col-sm-1">
-              <i class="fas fa-plus-circle directory-send-to-dial"></i>
+              <i class="action-icon fas fa-plus-circle directory-send-to-dial"></i>
             </div>
             <div class ="col-sm-1">
-              <i class="fas fa-trash directory-remove"></i>
+              <i class="action-icon fas fa-trash directory-remove"></i>
             </div>
           </div>`
 
   $("#directory-add-container").before(html)
 }
 
-function addDialRow(obj) {
-  html = `<div class="list-item">
+function addDialRow(obj, odd) {
+  html = `<div class="list-item ` + (odd ? "odd-row" : "even-row") + `">
               <div class="col-sm-3"><span class="callsign">` + obj.callsign + `</span></div>
               <div class="col-sm-2">` + obj.frequency + `</div>
               <div class="col-sm-5">` + obj.info + `</div>
               <div class="col-sm-1">
-                <i class="fas fa-play dial-tune"></i>
+                <i class="action-icon fas fa-play dial-tune"></i>
               </div>
               <div class="col-sm-1">
-                <i class="fas fa-minus-circle dial-remove"></i>
+                <i class="action-icon fas fa-minus-circle dial-remove"></i>
               </div>
             </div>`
   $("#dial-body").append(html)

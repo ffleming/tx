@@ -142,27 +142,41 @@
      -ms-flex-direction: column;
      flex-direction: column;
      min-width: 0;
-     word-wrap: break-word
+     word-wrap: break-word;
  }
 
  .list-row .list-item>* {
      padding-left: .625rem;
-     padding-right: .625rem
+     padding-right: .625rem;
  }
 
  .dropdown {
-     position: relative
+     position: relative;
  }
 
- a:focus,
- a:hover {
-     text-decoration: none
+ a:focus, a:hover {
+     text-decoration: none;
  }
 
  list-item {
-     background: white
+     background: white;
  }
 
-.hidden{ 
+.hidden{
     display: none;
 }
+
+.odd-row{
+  background: #EEEEEE;
+}
+
+.even-row{
+  background: white;
+}
+
+.action-icon{
+  cursor:pointer
+}
+
+/* #dial-body,#directory-body .list-item:nth-child(odd) {background: #EEE} */
+/* #dial-body,#directory-body .list-item:nth-child(even) {background: #FFF} */
