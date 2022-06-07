@@ -2,7 +2,7 @@ console.log("hey radio")
 
 function togglePower() {
   state = getState()
-  if($("#switch").text() === "On") {
+  if($("#toggle-power").hasClass("toggle-power-on")) {
     state.on = false
   } else {
     state.on = true
@@ -12,7 +12,7 @@ function togglePower() {
 
 function getState() {
   state = {
-    on: $("#switch").text() === "On",
+    on: $("#toggle-power").hasClass("toggle-power-on"),
     frequency: $("#tx-frequency").text(),
     dial: {
       selected: $("#dial-selected").text(),
@@ -55,9 +55,10 @@ function draw(state) {
   $("#directory-add-callsign").val("")
   $("#tx-frequency").val("")
 
-  $("#switch").text(state.on ? "On" : "Off")
   $("#dial-selected").text(state.dial.selected)
-  $("#toggle-power").removeClass("fa-toggle-on fa-toggle-off").addClass("action-icon fas fa-toggle-" + (state.on ? "on" : "off"))
+
+  var isOn = (state.on ? "on" : "off");
+  $("#toggle-power").removeClass("fa-toggle-on fa-toggle-off toggle-power-on toggle-power-off").addClass("action-icon fas fa-toggle-" + isOn + " toggle-power-" + isOn)
   $(".list-item:not(#directory-add-container)").each((_, el) => {
     el.remove()
   })

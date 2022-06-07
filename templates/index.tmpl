@@ -15,9 +15,6 @@
       <i id="toggle-power"></i>
     </div>
     <div>
-      <span id="switch">{{ if .on }}On{{ else }}Off{{ end }}</span>
-    </div>
-    <div>
       {{ if .on }}Broadcasting at {{ else }} Parked on {{ end }}
       <span id="tx-frequency">{{ .txFrequency }}</span> FM
     </div>
