@@ -6,7 +6,7 @@ After=network.target
 [Service]
 WorkingDirectory=/home/fsf/go/src/fsf/tx
 User=root
-ExecStart=/home/fsf/go/src/fsf/tx/tx-arm
+ExecStart=/home/fsf/go/src/fsf/tx/tx-arm6
 SyslogIdentifier=tx
 StandardOutput=syslog
 StandardError=syslog

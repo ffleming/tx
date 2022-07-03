@@ -19,7 +19,7 @@ var (
 	// log    *logger.Logger
 	fInfo  = flag.Bool("info", false, "Display INFO messages")
 	fDebug = flag.Bool("debug", false, "Dispay DEBUG messages")
-	fNoTx  = flag.Bool("no-tx", false, "Use a dummy command rather than broadcasting")
+	fTx    = flag.Bool("tx", true, "Use a dummy command rather than broadcasting")
 )
 
 func main() {
@@ -41,7 +41,7 @@ func main() {
 	router.StaticFile("/favicon.ico", "./assets/favicon.ico")
 	router.Static("/assets", "./assets")
 
-	c := context.WithValue(context.Background(), "tx", !*fNoTx)
+	c := context.WithValue(context.Background(), "tx", *fTx)
 	ctx, cancel := context.WithCancel(c)
 
 	r := radio.New(ctx, "/home/fsf/go/src/fsf/tx/state.json")
