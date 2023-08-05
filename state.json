@@ -332,6 +332,12 @@
         "url": "http://lpm.streamguys1.com/wfpk-web",
         "frequency": "91.9",
         "info": "Louisville public radio"
+      },
+      {
+        "callsign": "Radio Q37",
+        "url": "https://radioq.radioca.st/stream",
+        "frequency": "Radio Q37",
+        "info": "Radio for the mind travellers"
       }
     ]
   },
