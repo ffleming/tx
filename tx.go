@@ -16,7 +16,6 @@ import (
 )
 
 var (
-	// log    *logger.Logger
 	fInfo  = flag.Bool("info", false, "Display INFO messages")
 	fDebug = flag.Bool("debug", false, "Dispay DEBUG messages")
 	fTx    = flag.Bool("tx", true, "Broadcast over an antenna attached to GPIO")
